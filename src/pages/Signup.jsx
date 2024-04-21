@@ -1,15 +1,15 @@
 import axios from 'axios';
-// import { useState } from 'react';
 import { useLinkedIn } from 'react-linkedin-login-oauth2';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
+import { API } from '../constants/api';
 
 const Signup = () => {
   const navigate = useNavigate();
   const { setState } = useAuth();
   const { linkedInLogin } = useLinkedIn({
     clientId: import.meta.env.VITE_CLIENT_ID,
-    redirectUri: `http://localhost:5173/linkedin`,
+    redirectUri: `${window.location.origin}/linkedin`,
     scope: 'email openid profile',
     closePopupMessage: true,
     onSuccess: async (code) => {
@@ -25,14 +25,13 @@ const Signup = () => {
 
   const getUser = async (access_token) => {
     try {
-      const res = await axios.post(
-        `http://localhost:5000/api/auth/linkedin/user`,
-        {
-          access_token,
-        }
-      );
+      const res = await axios.post(`${API}/auth/linkedin/user`, {
+        access_token,
+      });
 
-      return res.data;
+      console.log(res);
+
+      if (res.status === 200) return res.data;
     } catch (error) {
       console.log(error.response);
     }
@@ -40,10 +39,9 @@ const Signup = () => {
 
   const getAccessToken = async (code) => {
     try {
-      const response = await axios.post(
-        `http://localhost:5000/api/auth/linkedin/access_token`,
-        { code }
-      );
+      const response = await axios.post(`${API}/auth/linkedin/access_token`, {
+        code,
+      });
 
       return response.data.data;
     } catch (error) {

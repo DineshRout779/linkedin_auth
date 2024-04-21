@@ -37,7 +37,6 @@ const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const { user } = state;
-  console.log('User from context:', user);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
